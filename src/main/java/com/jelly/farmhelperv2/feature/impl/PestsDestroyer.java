@@ -140,6 +140,7 @@ public class PestsDestroyer implements IFeature {
         isPlotObstructed = false;
         preparing = true;
         lastKillTimestamp = 0;
+//            Scheduler.getInstance().resume(); - gets enabled in featuremanager
         if (MacroHandler.getInstance().isMacroToggled()) {
             MacroHandler.getInstance().pauseMacro();
             MacroHandler.getInstance().getCurrentMacro().ifPresent(am -> am.setSavedState(Optional.empty()));
@@ -902,11 +903,11 @@ public class PestsDestroyer implements IFeature {
     @Nullable
     private Entity getClosestPest() {
         Entity closestPest = null;
-        double closestDistance = Double.MAX_VALUE;
+        double pestCost = Double.MAX_VALUE;
         for (Entity entity : pestsLocations) {
-            double distance = mc.thePlayer.getDistanceToEntity(entity);
-            if (distance < closestDistance) {
-                closestDistance = distance;
+            double currentCost = mc.thePlayer.getDistanceToEntity(entity) + AngleUtils.smallestAngleDifference(mc.thePlayer.rotationYaw, AngleUtils.getRotation(entity).getYaw());
+            if (currentCost < pestCost) {
+                pestCost = currentCost;
                 closestPest = entity;
             }
         }

@@ -267,7 +267,6 @@ public class MacroHandler {
             macroingTimer.resume();
             analyticsTimer.resume();
             afterRewarpDelay.reset();
-//            Scheduler.getInstance().resume(); - gets enabled in featuremanager
             FeatureManager.getInstance().resume();
         });
     }

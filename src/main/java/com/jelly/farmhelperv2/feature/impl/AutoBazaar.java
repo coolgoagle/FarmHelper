@@ -396,6 +396,16 @@ public class AutoBazaar implements IFeature {
                 if (this.hasTimerEnded()) {
                     this.disable("Could not buy item. Disabling");
                 }
+
+                // curse you whoever decided to return null in getInventoryName(), checking for null is literally downtime just return an empty string
+                if("Confirm".equals(InventoryUtils.getInventoryName()) && InventoryUtils.getSlotOfItemInContainer("WARNING") != null){
+                    LogUtils.sendError("[Auto Bazaar] Declining to Product Being Manipulated. Don't know why it wasn't picked up.");
+                    log("Product was manipulated");
+                    log("Disabling.");
+                    this.wasManipulated = true;
+                    this.disable("Spending more than allowed.");
+                    return;
+                }
                 // Verifying
                 break;
             case DISABLE:
@@ -409,6 +419,7 @@ public class AutoBazaar implements IFeature {
         }
     }
 
+    // the new confirm gui doenst appear when you're instaselling with the "sell inventory" button which is dumb asf so no need to check for that
     private void handleSellToBz() {
         switch (this.sellState) {
             case STARTING:
