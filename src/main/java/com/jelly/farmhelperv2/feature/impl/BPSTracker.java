@@ -5,6 +5,7 @@ import com.jelly.farmhelperv2.event.PlayerDestroyBlockEvent;
 import com.jelly.farmhelperv2.feature.IFeature;
 import com.jelly.farmhelperv2.handler.GameStateHandler;
 import com.jelly.farmhelperv2.handler.MacroHandler;
+import com.jelly.farmhelperv2.util.LogUtils;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockNetherWart;
 import net.minecraft.block.BlockReed;
@@ -66,10 +67,10 @@ public class BPSTracker implements IFeature {
             Multithreading.schedule(() -> {
                 isResumingScheduled = false;
                 if (dontCheckForBPS()) {
-                    // LogUtils.sendDebug("Canceled resuming BPS tracker");
+                     LogUtils.sendDebug("Canceled resuming BPS tracker");
                     return;
                 }
-                // LogUtils.sendDebug("Resuming BPS tracker");
+                 LogUtils.sendDebug("Resuming BPS tracker");
                 long pauseDuration = System.currentTimeMillis() - pauseStartTime;
                 adjustQueueTimestamps(pauseDuration);
                 isPaused = false;

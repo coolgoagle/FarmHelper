@@ -330,10 +330,14 @@ public class VisitorsMacro implements IFeature {
         if (mc.thePlayer == null || mc.theWorld == null) return;
         if (!GameStateHandler.getInstance().inGarden()) return;
         if (delayClock.isScheduled() && !delayClock.passed()) return;
-        if (GameStateHandler.getInstance().getServerClosingSeconds().isPresent()) {
-            LogUtils.sendError("[Visitors Macro] Server is closing in " + GameStateHandler.getInstance().getServerClosingSeconds().get() + " seconds!");
-            stop();
-            return;
+
+        if (GameStateHandler.getInstance().getServerClosingSeconds().isPresent() && this.mainState == MainState.VISITORS) {
+            LogUtils.sendError("[Visitors Macro] Server is closing in " + GameStateHandler.getInstance().getServerClosingSeconds().get() + " seconds! Going back to farming.");
+            currentRewards.clear();
+            spentMoney = 0;
+            setMainState(compactorsDisabled ? MainState.COMPACTORS : MainState.END);
+            setVisitorsState(VisitorsState.NONE);
+            delayClock.schedule(1_800);
         }
 
         if (stuckClock.isScheduled() && stuckClock.passed()) {
