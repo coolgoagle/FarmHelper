@@ -5,7 +5,7 @@ import com.jelly.farmhelperv2.event.PlayerDestroyBlockEvent;
 import com.jelly.farmhelperv2.feature.IFeature;
 import com.jelly.farmhelperv2.handler.GameStateHandler;
 import com.jelly.farmhelperv2.handler.MacroHandler;
-import com.jelly.farmhelperv2.util.LogUtils;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockNetherWart;
 import net.minecraft.block.BlockReed;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BPSTracker implements IFeature {
     private static BPSTracker instance;
-    public final LinkedList<Tuple<Long, Long>> bpsQueue = new LinkedList<>();
+    public final ConcurrentLinkedDeque<Tuple<Long, Long>> bpsQueue = new ConcurrentLinkedDeque<>();
     public long blocksBroken = 0;
     public long totalBlocksBroken = 0;
     private final NumberFormat oneDecimalDigitFormatter = NumberFormat.getNumberInstance(Locale.US);
@@ -67,16 +67,16 @@ public class BPSTracker implements IFeature {
             Multithreading.schedule(() -> {
                 isResumingScheduled = false;
                 if (dontCheckForBPS()) {
-                     LogUtils.sendDebug("Canceled resuming BPS tracker");
+//                     LogUtils.sendDebug("Canceled resuming BPS tracker");
                     return;
                 }
-                 LogUtils.sendDebug("Resuming BPS tracker");
                 long pauseDuration = System.currentTimeMillis() - pauseStartTime;
                 adjustQueueTimestamps(pauseDuration);
                 isPaused = false;
                 pauseStartTime = 0;
+//                LogUtils.sendDebug("Resuming BPS tracker. PauseDuration: " + pauseDuration);
             }, 1000L, TimeUnit.MILLISECONDS);
-            // LogUtils.sendDebug("Scheduled resuming BPS tracker");
+//            LogUtils.sendDebug("Scheduled resuming BPS tracker");
         }
     }
 
